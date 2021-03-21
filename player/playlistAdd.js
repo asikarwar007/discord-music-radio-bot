@@ -9,7 +9,7 @@ module.exports = (client, message, queue, playlist) => {
         embed: {
             color: 'RED',
             author: { name: track.title },
-            footer: { text: 'This Saini Bhai Gulaam' },
+            footer: { text: 'Saini Live' },
             fields: [
                 { name: 'Channel', value: track.author, inline: true },
                 { name: 'Requested by', value: track.requestedBy.username, inline: true },

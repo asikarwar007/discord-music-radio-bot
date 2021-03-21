@@ -37,6 +37,8 @@ module.exports = {
         // message.member.voice.channel.leave();
         let joinArg = args.join("%20")
         let url = 'http://radio.garden/api/search?q=' + joinArg
+
+        // console.log(client.radioChannelList);
         // let responseRaw = await axios.get(url)
         axios.get(url)
             .then(function (response) {
@@ -45,25 +47,131 @@ module.exports = {
                 if (searchResult) {
                     let hitsList = searchResult.hits.hits
                     let channelIdNew
+                    let placeId
+                    let channel
                     for (let i = 0; i < hitsList.length; i++) {
                         if (hitsList[i]._source.channelId && !channelIdNew) {
                             channelIdNew = hitsList[i]._source.channelId
+                            placeId = hitsList[i]._source.placeId
+                            channel = hitsList[i]._source
                         }
                     }
                     if (channelIdNew) {
-                        console.log(channelIdNew);
                         let channelUrl = "http://radio.garden/api/ara/content/listen/" + channelIdNew + "/channel.mp3"
-                        console.log(channelUrl);
                         // client.player.play(message, channelUrl, { firstResult: true });
 
+                        // message.channel.send({
+                        //     embed: {
+                        //         color: 'BLACK',
+                        //         author: { name: channel.title },
+                        //         footer: { text: 'Saini Live' },
+                        //         fields: [
+                        //             { name: 'Channel', value: channel.title, inline: true },
+                        //             { name: 'Location', value: channel.subtitle, inline: true }
+                        //         ],
+                        //         // thumbnail: { url: track.thumbnail },
+                        //         timestamp: new Date(),
+                        //     },
+                        // });
+                        message.channel.send({
+                            embed: {
+                                color: 'BLACK',
+                                author: { name: channel.title },
+                                footer: { text: 'Saini Live' },
+                                url: channelUrl,
+                                // author: {
+                                //     name: 'Some name',
+                                //     icon_url: 'https://i.imgur.com/wSTFkRM.png',
+                                //     url: 'https://discord.js.org',
+                                // },
+                                description: channel.subtitle,
+                                // thumbnail: {
+                                //     url: 'https://i.imgur.com/wSTFkRM.png',
+                                // },
+                                // image: {
+                                //     url: 'https://i.imgur.com/wSTFkRM.png',
+                                // },
+                                timestamp: new Date(),
+                                // footer: {
+                                //     text: 'Some footer text here',
+                                //     icon_url: 'https://i.imgur.com/wSTFkRM.png',
+                                // },
+                            },
+                        });
                         message.member.voice.channel.join()
                             .then(connection => {
                                 const dispatcher = connection.play(channelUrl);
+
+
+
                                 dispatcher.on("end", end => {
                                     message.member.voice.channel.leave();
                                     console.log('Playing is finished!');
                                 });
                             })
+
+                        let placeURL = "http://radio.garden/api/ara/content/page/" + placeId
+                        axios.get(placeURL)
+                            .then(async function (placeResponse) {
+                                let placeRes = placeResponse.data
+                                if (placeRes) {
+                                    let placeContentRaw = placeRes.data.content
+                                    let placeContent = placeContentRaw
+                                    for (let plaChannel = 0; plaChannel < placeContent.length; plaChannel++) {
+                                        if (placeContent[plaChannel].title == "Picks from the area") {
+                                            let channelList = []
+                                            for (let z = 0; z < placeContent[plaChannel].items.length; z++) {
+                                                let channelUrlRaw = placeContent[plaChannel].items[z].href.split('/')
+                                                let objStr = {
+                                                    name: (z + 1) + " : " + placeContent[plaChannel].items[z].title,
+                                                    value: channelUrlRaw.pop()
+                                                }
+                                                channelList.push(objStr)
+                                            }
+                                            client.radioChannelList = channelList
+                                            message.channel.send({
+                                                embed: {
+                                                    color: 'PINK',
+                                                    author: { name: placeContent[plaChannel].title },
+                                                    footer: { text: 'Saini Live' },
+                                                    // description: channel.subtitle,
+                                                    timestamp: new Date(),
+                                                    fields: channelList
+                                                },
+                                            });
+                                        }
+                                    }
+                                }
+                            })
+                        // let placeURL = "http://radio.garden/api/ara/content/page/" + placeId + "/channels"
+                        // axios.get(placeURL)
+                        //     .then(async function (placeResponse) {
+                        //         let placeRes = placeResponse.data
+                        //         if (placeRes) {
+                        //             let placeContentRaw = placeRes.data.content
+                        //             let placeContent = placeContentRaw[0].items
+                        //             let channelList = []
+                        //             for (let plaChannel = 0; plaChannel < placeContent.length; plaChannel++) {
+                        //                 let channelUrlRaw = placeContent[plaChannel].href.split('/')
+                        //                 let objStr = {
+                        //                     name: (plaChannel + 1) + " : " + placeContent[plaChannel].title,
+                        //                     value: channelUrlRaw.pop()
+                        //                 }
+                        //                 channelList.push(objStr)
+                        //             }
+                        //             message.channel.send({
+                        //                 embed: {
+                        //                     color: 'PINK',
+                        //                     author: { name: placeRes.data.count + " Channels From " + placeRes.data.title + ", " + placeRes.data.subtitle },
+                        //                     footer: { text: 'Saini Live' },
+                        //                     // description: channel.subtitle,
+                        //                     timestamp: new Date(),
+                        //                     fields: channelList
+                        //                 },
+                        //             });
+                        //         }
+                        //     })
+
                     }
                     // if (hitsList[0]) {
                     //     if (hitsList[0]._score > 50) {
