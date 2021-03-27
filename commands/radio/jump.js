@@ -31,11 +31,10 @@ module.exports = {
                     timestamp: new Date(),
 
                 },
-            });
+            }).then(msg => msg.delete({ timeout: 10000 }));
             message.member.voice.channel.join()
                 .then(connection => {
                     const dispatcher = connection.play(channelUrl);
-
                     dispatcher.on("end", end => {
                         message.member.voice.channel.leave();
                         console.log('Playing is finished!');

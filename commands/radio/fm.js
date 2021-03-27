@@ -22,7 +22,7 @@ module.exports = {
 
         if (!args[0]) return message.channel.send(`${client.emotes.error} - Please indicate the title of a song !`);
         // console.log(message);
-        console.log(args);
+        // console.log(args);
 
         const { name: guildName, voice } = message.guild;
         const connection = voice ? voice.connection : null;

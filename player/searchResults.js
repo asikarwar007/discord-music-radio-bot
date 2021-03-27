@@ -7,5 +7,5 @@ module.exports = (client, message, query, tracks) => {
             timestamp: new Date(),
             description: `${tracks.map((t, i) => `**${i + 1}** - ${t.title}`).join('\n')}`,
         },
-    });
+    }).then(msg => msg.delete({timeout: 10000}))
 };

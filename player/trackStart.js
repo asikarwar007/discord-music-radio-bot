@@ -27,5 +27,5 @@ module.exports = (client, message, track) => {
             thumbnail: { url: track.thumbnail },
             timestamp: new Date(),
         },
-    });
+    }).then(msg => msg.delete({timeout: 10000}));
 };
