@@ -58,44 +58,17 @@ module.exports = {
                     }
                     if (channelIdNew) {
                         let channelUrl = "http://radio.garden/api/ara/content/listen/" + channelIdNew + "/channel.mp3"
-                        // client.player.play(message, channelUrl, { firstResult: true });
-
-                        // message.channel.send({
-                        //     embed: {
-                        //         color: 'BLACK',
-                        //         author: { name: channel.title },
-                        //         footer: { text: 'Saini Live' },
-                        //         fields: [
-                        //             { name: 'Channel', value: channel.title, inline: true },
-                        //             { name: 'Location', value: channel.subtitle, inline: true }
-                        //         ],
-                        //         // thumbnail: { url: track.thumbnail },
-                        //         timestamp: new Date(),
-                        //     },
-                        // });
+                        
                         message.channel.send({
                             embed: {
                                 color: 'BLACK',
                                 author: { name: channel.title },
                                 footer: { text: 'Saini Live' },
-                                url: channelUrl,
-                                // author: {
-                                //     name: 'Some name',
-                                //     icon_url: 'https://i.imgur.com/wSTFkRM.png',
-                                //     url: 'https://discord.js.org',
-                                // },
+                           
                                 description: channel.subtitle,
-                                // thumbnail: {
-                                //     url: 'https://i.imgur.com/wSTFkRM.png',
-                                // },
-                                // image: {
-                                //     url: 'https://i.imgur.com/wSTFkRM.png',
-                                // },
+                               
                                 timestamp: new Date(),
-                                // footer: {
-                                //     text: 'Some footer text here',
-                                //     icon_url: 'https://i.imgur.com/wSTFkRM.png',
-                                // },
+                            
                             },
                         });
                         message.member.voice.channel.join()

@@ -6,7 +6,6 @@ require('dotenv').config()
 
 const { Player } = require("discord-player");
 client.player = new Player(client);
-// client.player.on('trackStart', (message, track) => message.channel.send(`Now playing ${track.title}...`))
 
 
 client.config = require('./config/config');
@@ -44,11 +43,5 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
  
-// client.on('message', msg => {
-//     // msg.reply('pong');
-//   if (msg.content === 'ping') {
-//     msg.reply('pong');
-//   }
-// });
- 
+
 client.login(process.env.token);
